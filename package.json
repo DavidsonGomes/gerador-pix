@@ -4,8 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx uvu tests",
-    "start": "node index.js",
-    "postinstall": "npx uvu tests && cd website && npm install && node_modules/.bin/webpack --mode production"
+    "start": "node index.js"
   },
   "engines": {
     "node": "^16.14.2",

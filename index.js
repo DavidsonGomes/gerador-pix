@@ -3,18 +3,14 @@ import bodyParser from "body-parser";
 import helmet from "helmet";
 import pino from "pino-http";
 import exphbs from "express-handlebars";
-import fs from "fs";
-import path from "path";
 import QRCode from "qrcode";
 import BrCode from "./lib/br_code.js";
-import HTMLParser from "node-html-parser";
 
 const app = express();
 
 app.use(helmet());
 app.use(pino());
 app.use(bodyParser.json());
-app.use(express.static("website/public"));
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
@@ -31,34 +27,10 @@ app.use((req, res, next) => {
   next();
 });
 
-fs.readdirSync("views/articles/").forEach((file) => {
-  var path_article = file.replace(/\.[^/.]+$/, "");
-
-  app.get("/" + path_article, function (req, res) {
-    res.render("articles/" + path_article, {
-      article: true,
-      google_public_id: process.env.google_public_id,
-    });
-  });
-
-  var data = fs.readFileSync("views/articles/" + file);
-
-  const root = HTMLParser.parse(data);
-
-  article_links.push({
-    title: root.querySelector("h1").rawText,
-    path: path_article,
-  });
-});
-
 app.get("/", function (req, res) {
   res.json({
     message: "Welcome to generate pix server!",
   });
-  // res.render("index", {
-  //   article_links: article_links,
-  //   google_public_id: process.env.google_public_id,
-  // });
 });
 
 app.post("/emvqr-static", (req, res) => {
